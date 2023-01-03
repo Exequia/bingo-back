@@ -13,11 +13,16 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+  // @Override
+  // public void configureMessageBroker(MessageBrokerRegistry config) {
+  //   log.info("configureMessageBroker");
+  //   config.enableSimpleBroker("/topic", "/queue");
+  //   config.setApplicationDestinationPrefixes("/app");
+  // }
   @Override
   public void configureMessageBroker(MessageBrokerRegistry config) {
-    log.info("configureMessageBroker");
-    config.enableSimpleBroker("/topic");
-    config.setApplicationDestinationPrefixes("/app");
+      config.enableSimpleBroker("/topic/", "/queue/");                // 1
+      config.setApplicationDestinationPrefixes("/app");               // 2
   }
 
   @Override
@@ -27,5 +32,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // registry.addEndpoint("/bingo-websocket").setAllowedOrigins("*").withSockJS();
     registry.addEndpoint("/bingo-websocket").setAllowedOrigins("http://localhost:4200").withSockJS();
   }
-
 }

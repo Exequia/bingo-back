@@ -1,10 +1,10 @@
 package are.bingo.services.players;
 
-import are.bingo.models.Player;
+import are.bingo.models.PlayerResponse;
 
 public interface IPlayersService {
 
-  public Player generateNewPlayer(String playerName);
+  public PlayerResponse generateNewPlayer(String playerName);
 
   public String generateId();
 
