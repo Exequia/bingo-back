@@ -1,10 +1,13 @@
 package are.bingo.config;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import are.bingo.models.GamePlayer;
 import are.bingo.models.GiftResponse;
 import are.bingo.models.Player;
 import are.bingo.models.PlayerResponse;
@@ -21,6 +24,7 @@ public class AppConfig {
   public BigDecimal balance() {
     return new BigDecimal("0.0");
   }
+
   @Bean
   public BigDecimal newCredit() {
     return new BigDecimal("100.0");
@@ -41,6 +45,8 @@ public class AppConfig {
     return new PlayerResponse();
   }
 
-  
-
+  @Bean
+  public List<GamePlayer> gamePlayers() {
+    return new ArrayList<GamePlayer>();
+  }
 }

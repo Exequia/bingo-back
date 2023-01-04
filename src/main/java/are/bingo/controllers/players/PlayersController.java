@@ -23,12 +23,10 @@ public class PlayersController implements IPlayersController {
   @Override
   @MessageMapping("/players/new")
   @SendToUser("/queue/reply")
-  // @SendTo("/queue/reply")
-  // @SendTo("/topic/game/players")
-  public PlayerResponse player(@RequestBody Player player) throws Exception {
+  public PlayerResponse newPlayer(@RequestBody Player player) throws Exception {
     log.info("new player controller start");
     PlayerResponse pResponse = this.playerService.generateNewPlayer(player.getName());
-    log.info("new player controller end");
+    log.info("new player controller end with: " + pResponse);
     return pResponse;
   }
 

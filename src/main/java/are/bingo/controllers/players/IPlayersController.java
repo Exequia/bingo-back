@@ -6,5 +6,5 @@ import are.bingo.models.Player;
 import are.bingo.models.PlayerResponse;
 
 public interface IPlayersController {
-  public PlayerResponse player(@RequestBody Player player) throws Exception;
+  public PlayerResponse newPlayer(@RequestBody Player player) throws Exception;
 }
