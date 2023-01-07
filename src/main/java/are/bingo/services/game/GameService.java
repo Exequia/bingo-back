@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import are.bingo.models.Game;
 import are.bingo.models.GamePlayer;
+import are.bingo.models.GameStatusEnum;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
@@ -16,6 +18,9 @@ public class GameService implements IGameService {
 
     @Autowired
     private List<GamePlayer> gamePlayers;
+
+    @Autowired
+    private Game game;
 
     @Override
     public List<GamePlayer> addGamePlayer(GamePlayer gamePlayer) {
@@ -31,5 +36,13 @@ public class GameService implements IGameService {
         this.gamePlayers.removeIf(player -> (player.getId().equals(playerId)));
         log.info("addGamePlayer end with: " + gamePlayers);
         return gamePlayers;
+    }
+
+    @Override
+    public GameStatusEnum setGameStatus(GameStatusEnum gameStatus) {
+        log.info("Set game status start with status: " + gameStatus);
+        this.game.setStatus(gameStatus);
+        log.info("Set game status start with status: " + gameStatus);
+        return this.game.getStatus();
     }
 }
