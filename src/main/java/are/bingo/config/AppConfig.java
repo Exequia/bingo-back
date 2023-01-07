@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import are.bingo.models.Game;
+import are.bingo.models.GameConfig;
 import are.bingo.models.GamePlayer;
 import are.bingo.models.GiftResponse;
 import are.bingo.models.Player;
@@ -55,4 +56,10 @@ public class AppConfig {
   public Game game() {
     return new Game();
   }
+
+  @Bean
+  public GameConfig config() {
+    return new GameConfig();
+  }
+
 }

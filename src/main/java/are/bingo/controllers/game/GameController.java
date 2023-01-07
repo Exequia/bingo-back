@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import are.bingo.models.GameConfig;
 import are.bingo.models.GamePlayer;
 import are.bingo.models.GameStatusEnum;
 import are.bingo.services.game.GameService;
@@ -47,5 +48,15 @@ private GameService gameService;
     GameStatusEnum newGameStatus = this.gameService.setGameStatus(gameStatus);
     log.info("Set game status end with status: " + newGameStatus);
     return newGameStatus;
+  }
+
+  @Override
+  @MessageMapping("/game/config")
+  @SendTo("/topic/game/config")
+  public GameConfig setGameConfig(GameConfig gameConfig) throws Exception {
+    log.info("Set game config as: " + gameConfig);
+    GameConfig newgameConfig = this.gameService.setGameConfig(gameConfig);
+    log.info("Set game config returns: " + newgameConfig);
+    return newgameConfig;
   }
 }
