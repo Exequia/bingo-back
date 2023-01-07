@@ -13,7 +13,7 @@ import lombok.extern.log4j.Log4j2;
 @Component
 @Log4j2
 public class GameService implements IGameService {
-    
+
     @Autowired
     private List<GamePlayer> gamePlayers;
 
@@ -25,4 +25,11 @@ public class GameService implements IGameService {
         return gamePlayers;
     }
 
+    @Override
+    public List<GamePlayer> disconectPlayer(String playerId) {
+        log.info("addGamePlayer start");
+        this.gamePlayers.removeIf(player -> (player.getId().equals(playerId)));
+        log.info("addGamePlayer end with: " + gamePlayers);
+        return gamePlayers;
+    }
 }

@@ -6,4 +6,6 @@ import are.bingo.models.GamePlayer;
 
 public interface IGameService {
     public List<GamePlayer> addGamePlayer(GamePlayer gamePlayer);
+
+    public List<GamePlayer> disconectPlayer(String playerId);
 }

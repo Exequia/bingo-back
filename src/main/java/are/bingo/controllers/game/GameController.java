@@ -22,9 +22,19 @@ private GameService gameService;
   @MessageMapping("/game/player")
   @SendTo("/topic/game/players")
   public List<GamePlayer> addPlayers(GamePlayer gamePlayer) throws Exception {
-    log.info("add player to the game start");
+    log.info("add player to the game start with values: " + gamePlayer);
     List<GamePlayer> gamePlayers = this.gameService.addGamePlayer(gamePlayer);
     log.info("add player to the game end and returns: " + gamePlayers);
+    return gamePlayers;
+  }
+
+  @Override
+  @MessageMapping("/game/disconect")
+  @SendTo("/topic/game/players")
+  public List<GamePlayer> disconectPlayer(String playerId) throws Exception {
+    log.info("Disconect Player to the game start for Id: " + playerId);
+    List<GamePlayer> gamePlayers = this.gameService.disconectPlayer(playerId);
+    log.info("Disconect Player to the game end and returns: " + gamePlayers);
     return gamePlayers;
   }
 }
