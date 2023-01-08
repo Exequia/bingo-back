@@ -5,10 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
 import are.bingo.models.GameConfig;
 import are.bingo.models.GamePlayer;
+import are.bingo.models.GameShoppingRequest;
+import are.bingo.models.GameShoppingResponse;
 import are.bingo.models.GameStatusEnum;
 import are.bingo.services.game.GameService;
 import lombok.extern.log4j.Log4j2;
@@ -57,6 +60,16 @@ private GameService gameService;
     log.info("Set game config as: " + gameConfig);
     GameConfig newgameConfig = this.gameService.setGameConfig(gameConfig);
     log.info("Set game config returns: " + newgameConfig);
+    return newgameConfig;
+  }
+
+  @Override
+  @MessageMapping("/game/shopping")
+  @SendToUser("/queue/roundDashboards")
+  public GameShoppingResponse gameShopping(GameShoppingRequest shoppingRequest) throws Exception {
+    log.info("User shopping : " + shoppingRequest);
+    GameShoppingResponse newgameConfig = this.gameService.gameShopping(shoppingRequest);
+    log.info("User shopping complete returns: " + newgameConfig);
     return newgameConfig;
   }
 }

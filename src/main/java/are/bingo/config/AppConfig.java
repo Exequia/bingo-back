@@ -3,6 +3,7 @@ package are.bingo.config;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,21 @@ public class AppConfig {
   }
 
   @Bean
+  public BigDecimal dashboardPrice() {
+    return new BigDecimal("5.0");
+  }
+
+  @Bean
+  public BigDecimal dashboardBonusTwoPrice() {
+    return new BigDecimal("1.0");
+  }
+
+  @Bean
+  public BigDecimal dashboardBonusThreePrice() {
+    return new BigDecimal("3.0");
+  }
+
+  @Bean
   public Player player() {
     return new Player();
   }
@@ -48,6 +64,11 @@ public class AppConfig {
   }
 
   @Bean
+  public List<Player> players() {
+    return new ArrayList<Player>();
+  }
+
+  @Bean
   public List<GamePlayer> gamePlayers() {
     return new ArrayList<GamePlayer>();
   }
@@ -60,6 +81,11 @@ public class AppConfig {
   @Bean
   public GameConfig config() {
     return new GameConfig();
+  }
+
+  @Bean
+  public Random randI() {
+    return new Random();
   }
 
 }

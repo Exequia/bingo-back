@@ -4,6 +4,8 @@ import java.util.List;
 
 import are.bingo.models.GameConfig;
 import are.bingo.models.GamePlayer;
+import are.bingo.models.GameShoppingRequest;
+import are.bingo.models.GameShoppingResponse;
 import are.bingo.models.GameStatusEnum;
 
 public interface IGameController {
@@ -14,4 +16,6 @@ public interface IGameController {
     public GameStatusEnum setGameStatus(GameStatusEnum gameStatus) throws Exception;
 
     public GameConfig setGameConfig(GameConfig gameConfig) throws Exception;
+    
+    public GameShoppingResponse gameShopping(GameShoppingRequest shoppingRequest) throws Exception;
 }

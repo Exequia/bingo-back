@@ -13,5 +13,10 @@ public class Player {
   private String name;
   @Autowired
   private BigDecimal amount;
-
+  @Autowired
+  private BigDecimal dashboardPrice;
+  @Autowired
+  private BigDecimal dashboardBonusTwoPrice;
+  @Autowired
+  private BigDecimal dashboardBonusThreePrice;
 }
