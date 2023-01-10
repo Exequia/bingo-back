@@ -77,7 +77,7 @@ public class GameService implements IGameService {
     public GameConfig setGameConfig(GameConfig gameConfig) {
         log.info("Set game config as: " + gameConfig);
         this.game.setConfig(gameConfig);
-        // this.applyPlayersRange(gameConfig);
+        this.applyPlayersRange(gameConfig);
         log.info("Set game config success");
         return this.game.getConfig();
     }

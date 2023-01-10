@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
@@ -20,9 +21,11 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class GameController implements IGameController {
 
-@Autowired
-private GameService gameService;
-    
+  @Autowired
+  private GameService gameService;
+  @Autowired
+  private SimpMessagingTemplate template;
+
   @Override
   @MessageMapping("/game/player")
   @SendTo("/topic/game/players")
@@ -59,6 +62,7 @@ private GameService gameService;
   public GameConfig setGameConfig(GameConfig gameConfig) throws Exception {
     log.info("Set game config as: " + gameConfig);
     GameConfig newgameConfig = this.gameService.setGameConfig(gameConfig);
+    this.template.convertAndSend("/topic/game/players", this.gameService.getGamePlayers());
     log.info("Set game config returns: " + newgameConfig);
     return newgameConfig;
   }
