@@ -18,4 +18,6 @@ public interface IGameController {
     public GameConfig setGameConfig(GameConfig gameConfig) throws Exception;
     
     public GameShoppingResponse gameShopping(GameShoppingRequest shoppingRequest) throws Exception;
+
+    public void emitGamePlayers() throws Exception;
 }

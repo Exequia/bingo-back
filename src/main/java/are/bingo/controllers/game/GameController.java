@@ -62,7 +62,7 @@ public class GameController implements IGameController {
   public GameConfig setGameConfig(GameConfig gameConfig) throws Exception {
     log.info("Set game config as: " + gameConfig);
     GameConfig newgameConfig = this.gameService.setGameConfig(gameConfig);
-    this.template.convertAndSend("/topic/game/players", this.gameService.getGamePlayers());
+    this.emitGamePlayers();
     log.info("Set game config returns: " + newgameConfig);
     return newgameConfig;
   }
@@ -73,7 +73,13 @@ public class GameController implements IGameController {
   public GameShoppingResponse gameShopping(GameShoppingRequest shoppingRequest) throws Exception {
     log.info("User shopping : " + shoppingRequest);
     GameShoppingResponse newgameConfig = this.gameService.gameShopping(shoppingRequest);
+    this.emitGamePlayers();
     log.info("User shopping complete returns: " + newgameConfig);
     return newgameConfig;
+  }
+
+  @Override
+  public void emitGamePlayers() throws Exception {
+    this.template.convertAndSend("/topic/game/players", this.gameService.getGamePlayers());
   }
 }

@@ -6,12 +6,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import are.bingo.models.Dashboard;
 import are.bingo.models.DashboardsLines;
+import are.bingo.models.GamePlayer;
 import are.bingo.models.Player;
 import lombok.extern.log4j.Log4j2;
 
@@ -21,6 +23,12 @@ public class UtilsService implements IUtilsService {
 
     @Autowired
     BigDecimal newCredit;
+    @Autowired
+    private BigDecimal dashboardPrice;
+    @Autowired
+    private BigDecimal dashboardBonusTwoPrice;
+    @Autowired
+    private BigDecimal dashboardBonusThreePrice;
 
     @Autowired
     Random randI;
@@ -30,6 +38,9 @@ public class UtilsService implements IUtilsService {
         player.setName(playerName);
         player.setId(this.generateId());
         player.setAmount(newCredit);
+        player.setDashboardPrice(dashboardPrice);
+        player.setDashboardBonusTwoPrice(dashboardBonusTwoPrice);
+        player.setDashboardBonusThreePrice(dashboardBonusThreePrice);
     }
 
     @Override
@@ -42,12 +53,21 @@ public class UtilsService implements IUtilsService {
         String[] dummyPlayersNames = new String[] { "Goku", "Bulma", "Vegeta", "Clara", "Iruma", "Azazel", "Samael",
                 "Gabriel", "Uriel", "Jon", "Antonia", "White", "Aria", "Hodor", "Sansa" };
         Player dummy = new Player();
+        dummy.setDummy(true);
         this.fillPlayerData(dummy, dummyPlayersNames[index]);
         return dummy;
     }
 
     @Override
-    public Player getPlaerById(List<Player> players, String playerId) {
+    public Player getPlayerById(List<Player> players, String playerId) {
+        return players.stream()
+                .filter(player -> playerId.equals(player.getId()))
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
+    public GamePlayer getGamePlayerById(List<GamePlayer> players, String playerId) {
         return players.stream()
                 .filter(player -> playerId.equals(player.getId()))
                 .findAny()
@@ -159,7 +179,8 @@ public class UtilsService implements IUtilsService {
                     .findFirst()
                     .orElse(null);
             if (null != match) {
-                // TODO: ARE - El orden no es perfecto. La tercera línea pude cambiar la primera. pero puede haber un segundo valor intermedio
+                // TODO: ARE - El orden no es perfecto. La tercera línea pude cambiar la
+                // primera. pero puede haber un segundo valor intermedio
                 newValue = match;
                 log.info("Replace " + match + " for: " + value);
                 line.getValues().set(line.getValues().indexOf(match), value);
@@ -170,5 +191,12 @@ public class UtilsService implements IUtilsService {
         }
         lineValues.add(newValue);
         log.info(lineValues);
+    }
+
+    @Override
+    public List<Player> getDummyPlayers(List<Player> players) {
+        return players.stream()
+                .filter(player -> player.isDummy())
+                .collect(Collectors.toList());
     }
 }

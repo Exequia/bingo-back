@@ -3,6 +3,7 @@ package are.bingo.models;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import lombok.Data;
 
@@ -19,4 +20,6 @@ public class Player {
   private BigDecimal dashboardBonusTwoPrice;
   @Autowired
   private BigDecimal dashboardBonusThreePrice;
+  @Value("false")
+  private boolean dummy;
 }

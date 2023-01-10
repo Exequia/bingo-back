@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class GamePlayer {
-    
+
     public GamePlayer() {
     }
 
@@ -15,4 +15,5 @@ public class GamePlayer {
 
     private String id;
     private String name;
+    private GamePlayerStatusEnum status = GamePlayerStatusEnum.LAZY;
 }

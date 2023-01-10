@@ -19,13 +19,15 @@ public interface IGameService {
 
     public List<GamePlayer> disconectPlayer(String playerId);
 
-    public GameStatusEnum setGameStatus(GameStatusEnum gameStatus);
+    public GameStatusEnum setGameStatus(GameStatusEnum gameStatus) throws Exception;
 
-    public GameConfig setGameConfig(GameConfig gameConfig);
+    public GameConfig setGameConfig(GameConfig gameConfig) throws Exception;
 
-    public void applyPlayersRange(GameConfig gameConfig);
+    public void applyPlayersRange(GameConfig gameConfig) throws Exception;
 
-    public void addDummyPlayers(int playersToAdd);
+    public void addDummyPlayers(int playersToAdd) throws Exception;
 
     public GameShoppingResponse gameShopping(GameShoppingRequest shoppingRequest) throws Exception;
+
+    public void shoppingDummyPlayers() throws Exception;
 }

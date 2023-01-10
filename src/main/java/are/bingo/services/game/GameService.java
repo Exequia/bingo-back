@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import are.bingo.models.Game;
 import are.bingo.models.GameConfig;
 import are.bingo.models.GamePlayer;
+import are.bingo.models.GamePlayerStatusEnum;
 import are.bingo.models.GameShoppingRequest;
 import are.bingo.models.GameShoppingResponse;
 import are.bingo.models.GameStatusEnum;
@@ -74,7 +75,7 @@ public class GameService implements IGameService {
     }
 
     @Override
-    public GameConfig setGameConfig(GameConfig gameConfig) {
+    public GameConfig setGameConfig(GameConfig gameConfig) throws Exception {
         log.info("Set game config as: " + gameConfig);
         this.game.setConfig(gameConfig);
         this.applyPlayersRange(gameConfig);
@@ -83,10 +84,11 @@ public class GameService implements IGameService {
     }
 
     @Override
-    public void applyPlayersRange(GameConfig gameConfig) {
+    public void applyPlayersRange(GameConfig gameConfig) throws Exception {
         int playersToAdd = gameConfig.getMinPlayers() - this.players.size();
         if (playersToAdd > 0) {
             this.addDummyPlayers(playersToAdd);
+            this.shoppingDummyPlayers();
         }
     }
 
@@ -104,7 +106,9 @@ public class GameService implements IGameService {
     public GameShoppingResponse gameShopping(GameShoppingRequest shoppingRequest) throws Exception {
         log.info("User shopping : " + shoppingRequest);
         GameShoppingResponse shoppingResponse = new GameShoppingResponse();
-        Player user = this.utilsService.getPlaerById(this.players, shoppingRequest.getPlayerId());
+        Player user = this.utilsService.getPlayerById(this.players, shoppingRequest.getPlayerId());
+        GamePlayer player = this.utilsService.getGamePlayerById(this.gamePlayers, shoppingRequest.getPlayerId());
+        player.setStatus(GamePlayerStatusEnum.READY);
         BigDecimal shoppingBalance = this.utilsService.getShoppingBalance(user.getDashboardPrice(),
                 shoppingRequest.getDashboardAmount());
         int validOperation = this.utilsService.checkValidOperation(user.getAmount(), shoppingBalance);
@@ -118,5 +122,18 @@ public class GameService implements IGameService {
         } else {
             throw new Exception("invalidUserCredit");
         }
+    }
+
+    @Override
+    public void shoppingDummyPlayers() throws Exception {
+        log.info("Dummy Player starts shopping");
+        List<Player> dummPlayers = this.utilsService.getDummyPlayers(this.players);
+        for (Player dummy : dummPlayers) {
+            GameShoppingRequest shoppingRequest = new GameShoppingRequest();
+            shoppingRequest.setPlayerId(dummy.getId());
+            shoppingRequest.setDashboardAmount(5);
+            this.gameShopping(shoppingRequest);
+        }
+        log.info("Dummy Player ends shopping");
     }
 }
