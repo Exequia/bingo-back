@@ -32,6 +32,7 @@ public class GameController implements IGameController {
   public List<GamePlayer> addPlayers(GamePlayer gamePlayer) throws Exception {
     log.info("add player to the game start with values: " + gamePlayer);
     List<GamePlayer> gamePlayers = this.gameService.addGamePlayer(gamePlayer);
+    this.gameService.emitGamePlayers(this.template);
     log.info("add player to the game end and returns: " + gamePlayers);
     return gamePlayers;
   }
@@ -42,6 +43,7 @@ public class GameController implements IGameController {
   public List<GamePlayer> disconectPlayer(String playerId) throws Exception {
     log.info("Disconect Player to the game start for Id: " + playerId);
     List<GamePlayer> gamePlayers = this.gameService.disconectPlayer(playerId);
+    this.gameService.emitGamePlayers(this.template);
     log.info("Disconect Player to the game end and returns: " + gamePlayers);
     return gamePlayers;
   }
@@ -62,7 +64,8 @@ public class GameController implements IGameController {
   public GameConfig setGameConfig(GameConfig gameConfig) throws Exception {
     log.info("Set game config as: " + gameConfig);
     GameConfig newgameConfig = this.gameService.setGameConfig(gameConfig);
-    this.emitGamePlayers();
+    this.gameService.emitGamePlayers(this.template);
+    this.gameService.emitGameStatus(this.template);
     log.info("Set game config returns: " + newgameConfig);
     return newgameConfig;
   }
@@ -73,13 +76,9 @@ public class GameController implements IGameController {
   public GameShoppingResponse gameShopping(GameShoppingRequest shoppingRequest) throws Exception {
     log.info("User shopping : " + shoppingRequest);
     GameShoppingResponse newgameConfig = this.gameService.gameShopping(shoppingRequest);
-    this.emitGamePlayers();
+    this.gameService.emitGamePlayers(this.template);
+    this.gameService.checkAllGamePlayersReady(this.template);
     log.info("User shopping complete returns: " + newgameConfig);
     return newgameConfig;
-  }
-
-  @Override
-  public void emitGamePlayers() throws Exception {
-    this.template.convertAndSend("/topic/game/players", this.gameService.getGamePlayers());
   }
 }

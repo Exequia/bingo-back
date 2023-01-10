@@ -2,6 +2,8 @@ package are.bingo.services.game;
 
 import java.util.List;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+
 import are.bingo.models.GameConfig;
 import are.bingo.models.GamePlayer;
 import are.bingo.models.GameShoppingRequest;
@@ -10,6 +12,10 @@ import are.bingo.models.GameStatusEnum;
 import are.bingo.models.Player;
 
 public interface IGameService {
+
+    public void emitGamePlayers(SimpMessagingTemplate template) throws Exception;
+
+    public void emitGameStatus(SimpMessagingTemplate template) throws Exception;
 
     public void addPlayer(Player player);
 
@@ -30,4 +36,6 @@ public interface IGameService {
     public GameShoppingResponse gameShopping(GameShoppingRequest shoppingRequest) throws Exception;
 
     public void shoppingDummyPlayers() throws Exception;
+
+    public void checkAllGamePlayersReady(SimpMessagingTemplate template) throws Exception;
 }

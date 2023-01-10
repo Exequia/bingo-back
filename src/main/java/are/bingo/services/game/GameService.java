@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import are.bingo.models.Game;
@@ -34,6 +35,16 @@ public class GameService implements IGameService {
 
     @Autowired
     private UtilsService utilsService;
+
+    @Override
+    public void emitGamePlayers(SimpMessagingTemplate template) throws Exception {
+        template.convertAndSend("/topic/game/players", this.getGamePlayers());
+    }
+
+    @Override
+    public void emitGameStatus(SimpMessagingTemplate template) throws Exception {
+        template.convertAndSend("/topic/game/status", this.game.getStatus());
+    }
 
     @Override
     public void addPlayer(Player player) {
@@ -79,6 +90,7 @@ public class GameService implements IGameService {
         log.info("Set game config as: " + gameConfig);
         this.game.setConfig(gameConfig);
         this.applyPlayersRange(gameConfig);
+        this.game.setStatus(GameStatusEnum.SHOPPING);
         log.info("Set game config success");
         return this.game.getConfig();
     }
@@ -135,5 +147,14 @@ public class GameService implements IGameService {
             this.gameShopping(shoppingRequest);
         }
         log.info("Dummy Player ends shopping");
+    }
+
+    @Override
+    public void checkAllGamePlayersReady(SimpMessagingTemplate template) throws Exception {
+        boolean allReady = this.gamePlayers.stream().allMatch(gamePlayer -> gamePlayer.getStatus().equals(GamePlayerStatusEnum.READY));
+        if (allReady) {
+            this.game.setStatus(GameStatusEnum.STARTED);
+            this.emitGameStatus(template);
+        }
     }
 }

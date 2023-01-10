@@ -31,7 +31,6 @@ public class PlayersService implements IPlayersService {
     log.info("generateNewPlayer start");
     utilsService.fillPlayerData(playerResponse.getPlayer(), playerName);
     playerResponse.getGift().setBalance(newCredit);
-    this.gameService.addPlayer(playerResponse.getPlayer());
     log.info("generateNewPlayer end with: " + playerResponse);
     return playerResponse;
   }
