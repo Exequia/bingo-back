@@ -13,6 +13,7 @@ import are.bingo.models.GamePlayer;
 import are.bingo.models.GamePlayerStatusEnum;
 import are.bingo.models.GameShoppingRequest;
 import are.bingo.models.GameShoppingResponse;
+import are.bingo.models.GameStatus;
 import are.bingo.models.GameStatusEnum;
 import are.bingo.models.Player;
 import are.bingo.services.utils.UtilsService;
@@ -78,9 +79,9 @@ public class GameService implements IGameService {
     }
 
     @Override
-    public GameStatusEnum setGameStatus(GameStatusEnum gameStatus) {
+    public GameStatus setGameStatus(GameStatusEnum gameStatus) {
         log.info("Set game status start with status: " + gameStatus);
-        this.game.setStatus(gameStatus);
+        this.game.getStatus().setStatus(gameStatus);
         log.info("Set game status success");
         return this.game.getStatus();
     }
@@ -90,7 +91,7 @@ public class GameService implements IGameService {
         log.info("Set game config as: " + gameConfig);
         this.game.setConfig(gameConfig);
         this.applyPlayersRange(gameConfig);
-        this.game.setStatus(GameStatusEnum.SHOPPING);
+        this.game.getStatus().setStatus(GameStatusEnum.SHOPPING);
         log.info("Set game config success");
         return this.game.getConfig();
     }
@@ -153,7 +154,7 @@ public class GameService implements IGameService {
     public void checkAllGamePlayersReady(SimpMessagingTemplate template) throws Exception {
         boolean allReady = this.gamePlayers.stream().allMatch(gamePlayer -> gamePlayer.getStatus().equals(GamePlayerStatusEnum.READY));
         if (allReady) {
-            this.game.setStatus(GameStatusEnum.STARTED);
+            this.game.getStatus().setStatus(GameStatusEnum.STARTED);
             this.emitGameStatus(template);
         }
     }

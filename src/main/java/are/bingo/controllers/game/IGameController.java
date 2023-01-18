@@ -6,6 +6,7 @@ import are.bingo.models.GameConfig;
 import are.bingo.models.GamePlayer;
 import are.bingo.models.GameShoppingRequest;
 import are.bingo.models.GameShoppingResponse;
+import are.bingo.models.GameStatus;
 import are.bingo.models.GameStatusEnum;
 
 public interface IGameController {
@@ -13,7 +14,7 @@ public interface IGameController {
 
     public List<GamePlayer> disconectPlayer(String playerId) throws Exception;
 
-    public GameStatusEnum setGameStatus(GameStatusEnum gameStatus) throws Exception;
+    public GameStatus setGameStatus(GameStatusEnum gameStatus) throws Exception;
 
     public GameConfig setGameConfig(GameConfig gameConfig) throws Exception;
     

@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class Game {
 
-    private GameStatusEnum status = GameStatusEnum.PENDING;
+    @Autowired
+    private GameStatus status;
     @Autowired
     private GameConfig config;
 }

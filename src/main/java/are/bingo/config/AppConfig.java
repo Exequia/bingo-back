@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import are.bingo.models.Game;
 import are.bingo.models.GameConfig;
 import are.bingo.models.GamePlayer;
+import are.bingo.models.GameStatus;
 import are.bingo.models.GiftResponse;
 import are.bingo.models.Player;
 import are.bingo.models.PlayerResponse;
@@ -88,4 +89,8 @@ public class AppConfig {
     return new Random();
   }
 
+  @Bean
+  public GameStatus status() {
+    return new GameStatus();
+  }
 }

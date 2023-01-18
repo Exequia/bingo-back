@@ -13,6 +13,7 @@ import are.bingo.models.GameConfig;
 import are.bingo.models.GamePlayer;
 import are.bingo.models.GameShoppingRequest;
 import are.bingo.models.GameShoppingResponse;
+import are.bingo.models.GameStatus;
 import are.bingo.models.GameStatusEnum;
 import are.bingo.services.game.GameService;
 import lombok.extern.log4j.Log4j2;
@@ -51,9 +52,9 @@ public class GameController implements IGameController {
   @Override
   @MessageMapping("/game/status")
   @SendTo("/topic/game/status")
-  public GameStatusEnum setGameStatus(GameStatusEnum gameStatus) throws Exception {
+  public GameStatus setGameStatus(GameStatusEnum gameStatus) throws Exception {
     log.info("Set game status start with status: " + gameStatus);
-    GameStatusEnum newGameStatus = this.gameService.setGameStatus(gameStatus);
+    GameStatus newGameStatus = this.gameService.setGameStatus(gameStatus);
     log.info("Set game status end with status: " + newGameStatus);
     return newGameStatus;
   }
