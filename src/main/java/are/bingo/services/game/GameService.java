@@ -70,6 +70,10 @@ public class GameService implements IGameService {
     public List<GamePlayer> addGamePlayer(GamePlayer gamePlayer) {
         log.info("addGamePlayer start");
         this.gamePlayers.add(gamePlayer);
+        Player newPlayer = new Player();
+        this.utilsService.fillPlayerData(newPlayer, gamePlayer.getName());
+        newPlayer.setId(gamePlayer.getId());
+        this.players.add(newPlayer);
         log.info("addGamePlayer end with: " + gamePlayers);
         return gamePlayers;
     }
