@@ -15,6 +15,7 @@ import are.bingo.models.GameStatus;
 import are.bingo.models.GiftResponse;
 import are.bingo.models.Player;
 import are.bingo.models.PlayerResponse;
+import are.bingo.models.Round;
 
 @Configuration
 public class AppConfig {
@@ -92,5 +93,10 @@ public class AppConfig {
   @Bean
   public GameStatus status() {
     return new GameStatus();
+  }
+
+  @Bean
+  public Round round() {
+    return new Round();
   }
 }

@@ -15,6 +15,7 @@ import are.bingo.models.Dashboard;
 import are.bingo.models.DashboardsLines;
 import are.bingo.models.GamePlayer;
 import are.bingo.models.Player;
+import are.bingo.models.Round;
 import lombok.extern.log4j.Log4j2;
 
 @Component
@@ -84,15 +85,18 @@ public class UtilsService implements IUtilsService {
         return userCredit.compareTo(shoppingBalance);
     }
 
+    @Override
     public int getRandomInt(int bound) {
         return randI.nextInt(bound);
     }
 
+    @Override
     public int getRandomDashboardValue() {
-        int myRandInt = randI.nextInt(100);
+        int myRandInt = randI.nextInt(90);
         return myRandInt + 1;
     }
 
+    @Override
     public List<Dashboard> getNewDashboards(List<Player> players, int dashboardAmount) {
         log.info("getNewDashboards starts with : " + dashboardAmount);
         List<Dashboard> dashboards = new ArrayList<Dashboard>();
@@ -106,17 +110,21 @@ public class UtilsService implements IUtilsService {
         return dashboards;
     }
 
+    @Override
     public boolean checkValidDashboard(List<Player> players, Dashboard dashboard) {
+        // TODO: ARE - check different dashboard values
         return true;
     }
 
+    @Override
     public Dashboard getRandomDashboard() {
         Dashboard dashboard = new Dashboard();
         dashboard.setLines(this.getDashboardLines());
         return dashboard;
     }
 
-    private List<DashboardsLines> getDashboardLines() {
+    @Override
+    public List<DashboardsLines> getDashboardLines() {
         List<DashboardsLines> dashboardsLines = new ArrayList<DashboardsLines>();
         for (int i = 0; i < 3; i++) {
             this.getNewDashboardLine(dashboardsLines);
@@ -124,13 +132,15 @@ public class UtilsService implements IUtilsService {
         return dashboardsLines;
     }
 
-    private void getNewDashboardLine(List<DashboardsLines> dashboardsLines) {
+    @Override
+    public void getNewDashboardLine(List<DashboardsLines> dashboardsLines) {
         dashboardsLines.add(new DashboardsLines());
         List<Integer> colValues = this.getLineBaseValues();
         this.getDashboardLinesValues(dashboardsLines, colValues);
     }
 
-    private List<Integer> getLineBaseValues() {
+    @Override
+    public List<Integer> getLineBaseValues() {
         int colValuesLenght = 5;
         List<Integer> colValues = new ArrayList<Integer>();
         for (int i = 0; i < colValuesLenght; i++) {
@@ -144,7 +154,8 @@ public class UtilsService implements IUtilsService {
         return colValues;
     }
 
-    private void getDashboardLinesValues(List<DashboardsLines> dashboardsLines, List<Integer> colValues) {
+    @Override
+    public void getDashboardLinesValues(List<DashboardsLines> dashboardsLines, List<Integer> colValues) {
         List<Integer> lineValues = new ArrayList<Integer>();
         for (int i = 0; i < colValues.size(); i++) {
             Integer value;
@@ -157,7 +168,8 @@ public class UtilsService implements IUtilsService {
         dashboardsLines.get(dashboardsLines.size() - 1).setValues(lineValues);
     }
 
-    private boolean checkValidValue(List<DashboardsLines> dashboardsLines, List<Integer> lineValues, Integer value) {
+    @Override
+    public boolean checkValidValue(List<DashboardsLines> dashboardsLines, List<Integer> lineValues, Integer value) {
         if (lineValues.contains(value)) {
             return true;
         } else {
@@ -170,7 +182,8 @@ public class UtilsService implements IUtilsService {
         }
     }
 
-    private void addValue(List<DashboardsLines> dashboardsLines, List<Integer> lineValues, Integer value) {
+    @Override
+    public void addValue(List<DashboardsLines> dashboardsLines, List<Integer> lineValues, Integer value) {
         Integer newValue = value;
         for (DashboardsLines line : dashboardsLines) {
             int valueDecent = value / 10;
@@ -198,5 +211,20 @@ public class UtilsService implements IUtilsService {
         return players.stream()
                 .filter(player -> player.isDummy())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void getRoundNewValue(Round round) {
+        Integer newValue = 0;
+        do {
+            newValue = this.getRandomDashboardValue();
+        } while (this.checkValidValue(newValue, round.getValues()));
+        round.setNewValue(newValue);
+        round.getValues().add(newValue);
+    }
+
+    @Override
+    public boolean checkValidValue(Integer newValue, List<Integer> values) {
+        return values.contains(newValue);
     }
 }

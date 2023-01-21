@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import are.bingo.models.GameShoppingResponse;
 import are.bingo.models.GameStatus;
 import are.bingo.models.GameStatusEnum;
 import are.bingo.models.Player;
+import are.bingo.services.utils.PlayRound;
 import are.bingo.services.utils.UtilsService;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -24,6 +26,9 @@ import lombok.extern.log4j.Log4j2;
 @Component
 @Log4j2
 public class GameService implements IGameService {
+
+    @Value("${gameRoundTimeSleep}")
+    private Integer gameRoundTimeSleep;
 
     @Autowired
     private List<Player> players;
@@ -121,11 +126,11 @@ public class GameService implements IGameService {
         GameShoppingResponse shoppingResponse = new GameShoppingResponse();
         Player user = this.utilsService.getPlayerById(this.players, shoppingRequest.getPlayerId());
         GamePlayer player = this.utilsService.getGamePlayerById(this.gamePlayers, shoppingRequest.getPlayerId());
-        player.setStatus(GamePlayerStatusEnum.READY);
         BigDecimal shoppingBalance = this.utilsService.getShoppingBalance(user.getDashboardPrice(),
                 shoppingRequest.getDashboardAmount());
         int validOperation = this.utilsService.checkValidOperation(user.getAmount(), shoppingBalance);
         if (validOperation >= 0) {
+            player.setStatus(GamePlayerStatusEnum.READY);
             shoppingResponse.setDashboards(
                     this.utilsService.getNewDashboards(this.players, shoppingRequest.getDashboardAmount()));
             user.setAmount(user.getAmount().subtract(shoppingBalance));
@@ -152,10 +157,13 @@ public class GameService implements IGameService {
 
     @Override
     public void checkAllGamePlayersReady(SimpMessagingTemplate template) throws Exception {
-        boolean allReady = this.gamePlayers.stream().allMatch(gamePlayer -> gamePlayer.getStatus().equals(GamePlayerStatusEnum.READY));
+        boolean allReady = this.gamePlayers.stream()
+                .allMatch(gamePlayer -> gamePlayer.getStatus().equals(GamePlayerStatusEnum.READY));
         if (allReady) {
             this.game.getStatus().setStatus(GameStatusEnum.STARTED);
             this.emitGameStatus(template);
+            PlayRound round = new PlayRound(this.utilsService, this.gameRoundTimeSleep, template, this.game);
+            round.start();
         }
     }
 }
